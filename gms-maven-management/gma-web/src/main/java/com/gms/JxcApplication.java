@@ -14,6 +14,6 @@ public class JxcApplication extends SpringBootServletInitializer{
 	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(JxcApplication.class);
+		return application.sources(JxcApplication.class); 
 	}
 }
