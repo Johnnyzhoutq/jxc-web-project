@@ -8,7 +8,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 @SpringBootApplication
 public class JxcApplication extends SpringBootServletInitializer{
 	
-	//application.java
+	//
 	public static void main(String[] args) {
 		SpringApplication.run(JxcApplication.class, args);
 	}
