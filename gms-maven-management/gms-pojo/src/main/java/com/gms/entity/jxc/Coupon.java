@@ -1,7 +1,5 @@
 package com.gms.entity.jxc;
 
-import java.util.Date;
-
 import javax.persistence.*;
 /**
  * @author zhoutianqi
@@ -42,13 +40,13 @@ public class Coupon {
      * 有效开始时间
      */
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expiryDateStart;
+    private String expiryDateStart;
 
     /**
      * 有效结束时间
      */
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expiryDateStop;
+    private String expiryDateStop;
 
     /**
      * @return id
@@ -131,7 +129,7 @@ public class Coupon {
      *
      * @return expiry_date_start - 有效开始时间
      */
-    public Date getExpiryDateStart() {
+    public String getExpiryDateStart() {
         return expiryDateStart;
     }
 
@@ -140,7 +138,7 @@ public class Coupon {
      *
      * @param expiryDateStart 有效开始时间
      */
-    public void setExpiryDateStart(Date expiryDateStart) {
+    public void setExpiryDateStart(String expiryDateStart) {
         this.expiryDateStart = expiryDateStart;
     }
 
@@ -149,7 +147,7 @@ public class Coupon {
      *
      * @return expiry_date_stop - 有效结束时间
      */
-    public Date getExpiryDateStop() {
+    public String getExpiryDateStop() {
         return expiryDateStop;
     }
 
@@ -158,7 +156,7 @@ public class Coupon {
      *
      * @param expiryDateStop 有效结束时间
      */
-    public void setExpiryDateStop(Date expiryDateStop) {
+    public void setExpiryDateStop(String expiryDateStop) {
         this.expiryDateStop = expiryDateStop;
     }
 }
