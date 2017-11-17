@@ -16,9 +16,8 @@ public class CouponCode {
     /**
      * 优惠券
      */
-    @ManyToOne
-	@JoinColumn(name="couponId")
-	private Coupon coupon;
+    @Column(length=11)
+    private Integer couponId;
     /**
      * 优惠券编码
      */
@@ -50,13 +49,12 @@ public class CouponCode {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public Coupon getCoupon() {
-		return coupon;
+	public Integer getCouponId() {
+		return couponId;
 	}
 
-	public void setCoupon(Coupon coupon) {
-		this.coupon = coupon;
+	public void setCouponId(Integer couponId) {
+		this.couponId = couponId;
 	}
 
 	/**

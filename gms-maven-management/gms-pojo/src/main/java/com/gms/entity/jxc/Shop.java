@@ -16,7 +16,7 @@ public class Shop {
      * 门店自增ID
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer id;
 
     /**

@@ -16,11 +16,18 @@ public class Coupon {
     @GeneratedValue
     private Integer id;
 
-    @ManyToOne
-	@JoinColumn(name="shopId")
-	private Shop shop; // 商户
+    @Column(length=11)
+    private Integer shopId; // 商户
 
-    /**
+    public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
+
+	/**
      * 优惠券批次号
      */
     @Column(length=11)
@@ -63,14 +70,6 @@ public class Coupon {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public Shop getShop() {
-		return shop;
-	}
-
-	public void setShop(Shop shop) {
-		this.shop = shop;
-	}
 
 	/**
      * 获取优惠券批次号
