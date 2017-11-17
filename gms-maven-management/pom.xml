@@ -24,7 +24,7 @@
         <!--  依赖版本  -->
         <pagehelper.version>4.1.1</pagehelper.version>
         <httpclient.version>4.3.1</httpclient.version>
-        <start-class>com.gms.dao.Application</start-class>
+        <start-class>com.gms.JxcApplication</start-class>
     </properties>
     <dependencies>
 		<dependency>
