@@ -55,19 +55,8 @@ public class User {
 	@Column(length=1)
 	private String userType;
 	
-	@Column(length=500)
-	private String shopName;
-	
-	public String getBusinessName() {
-		return businessName;
-	}
-
-	public void setBusinessName(String businessName) {
-		this.businessName = businessName;
-	}
-
-	@Column(length=500)
-	private String businessName;
+	@Column(length=11)
+    private Integer shopId; // 商户
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createTime;
@@ -159,12 +148,12 @@ public class User {
 		this.userType = userType;
 	}
 
-	public String getShopName() {
-		return shopName;
+	public Integer getShopId() {
+		return shopId;
 	}
 
-	public void setShopName(String shopName) {
-		this.shopName = shopName;
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
 	}
 
 	public Date getCreateTime() {

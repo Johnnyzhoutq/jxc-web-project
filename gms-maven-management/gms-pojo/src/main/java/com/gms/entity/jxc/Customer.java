@@ -35,14 +35,14 @@ public class Customer {
 	private String remarks; // 备注
 
 	@Column(length=11)
-    private Integer userId; // 商户
+    private Integer shopId; // 商户
 
-    public Integer getUserId() {
-		return userId;
+    public Integer getShopId() {
+		return shopId;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
 	}
 	
 	public Integer getId() {
