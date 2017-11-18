@@ -1,10 +1,14 @@
 package com.gms.entity.jxc;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -22,6 +26,9 @@ public class User {
 	@GeneratedValue
 	private Integer id; // 编号
 	
+	@Column(length=1000)
+	private String bz; // 
+	
 	@NotEmpty(message="请输入用户名！")
 	@Column(length=50)
 	private String userName; // 用户名
@@ -35,6 +42,41 @@ public class User {
 	
 	@Column(length=1000)
 	private String remarks; // 备注
+	
+	@Column(length=20)
+	private String phoneNum;
+	
+	@Column(length=100)
+	private String portrait;
+	
+	@Column(length=500)
+	private String address;
+	
+	@Column(length=1)
+	private String userType;
+	
+	@Column(length=500)
+	private String shopName;
+	
+	public String getBusinessName() {
+		return businessName;
+	}
+
+	public void setBusinessName(String businessName) {
+		this.businessName = businessName;
+	}
+
+	@Column(length=500)
+	private String businessName;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createTime;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date updateTime;
+	
+	@Column(length=64)
+	private String uuid;
 	
 	@Transient
 	private String roles; 
@@ -75,6 +117,78 @@ public class User {
 
 	public String getRemarks() {
 		return remarks;
+	}
+
+	public String getBz() {
+		return bz;
+	}
+
+	public void setBz(String bz) {
+		this.bz = bz;
+	}
+
+	public String getPhoneNum() {
+		return phoneNum;
+	}
+
+	public void setPhoneNum(String phoneNum) {
+		this.phoneNum = phoneNum;
+	}
+
+	public String getPortrait() {
+		return portrait;
+	}
+
+	public void setPortrait(String portrait) {
+		this.portrait = portrait;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public void setRemarks(String remarks) {

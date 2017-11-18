@@ -60,6 +60,17 @@ public class Goods {
 	@Column(length=1000)
 	private String remarks; // 备注
 	
+	@Column(length=11)
+    private Integer userId; // 商户
+
+    public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+	
 	@Transient
 	private String codeOrName; // 查询用到  根据商品编码或者商品名称查询
 

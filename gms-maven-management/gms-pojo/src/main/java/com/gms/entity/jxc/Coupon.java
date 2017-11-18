@@ -17,14 +17,14 @@ public class Coupon {
     private Integer id;
 
     @Column(length=11)
-    private Integer shopId; // 商户
+    private Integer userId; // 商户
 
-    public Integer getShopId() {
-		return shopId;
+    public Integer getUserId() {
+		return userId;
 	}
 
-	public void setShopId(Integer shopId) {
-		this.shopId = shopId;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	/**
