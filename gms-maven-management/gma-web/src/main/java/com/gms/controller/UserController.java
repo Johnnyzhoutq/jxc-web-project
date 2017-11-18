@@ -35,6 +35,7 @@ import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.MenuService;
 import com.gms.service.jxc.RoleService;
 import com.gms.service.jxc.UserService;
+import com.gms.util.MD5Util;
 import com.gms.util.StringUtil;
 
 /**
@@ -85,7 +86,7 @@ public class UserController {
     		return map;
     	}
 		Subject subject=SecurityUtils.getSubject();
-		UsernamePasswordToken token=new UsernamePasswordToken(user.getUserName(), user.getPassword());
+		UsernamePasswordToken token=new UsernamePasswordToken(user.getUserName(), MD5Util.encode(user.getPassword()));
 		try{
 			subject.login(token); // 登录认证
 			String userName=(String) SecurityUtils.getSubject().getPrincipal();

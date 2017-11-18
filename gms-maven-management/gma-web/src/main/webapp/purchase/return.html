@@ -14,8 +14,8 @@
 	var url;
 	
 	function openReturnListGoodsAddDialog(){
+		$("#action").val("add");
 		$("#dlg").dialog("open").dialog("setTitle","退货出库商品选择");
-		
 		$("#tree").tree({
 			url:'/admin/goodsType/loadTreeInfo',
 			onLoadSuccess:function(node, data){

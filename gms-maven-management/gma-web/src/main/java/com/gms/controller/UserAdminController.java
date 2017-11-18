@@ -1,5 +1,6 @@
 package com.gms.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,9 @@ import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.RoleService;
 import com.gms.service.jxc.UserRoleService;
 import com.gms.service.jxc.UserService;
+import com.gms.util.MD5Util;
 import com.gms.util.StringUtil;
+import com.gms.util.UUIDUtil;
 
 /**
  * 后台管理用户Controller
@@ -61,7 +64,8 @@ public class UserAdminController {
 	public Map<String,Object> modifyPassword(Integer id,String newPassword,HttpSession session)throws Exception{
 		User currentUser=(User) session.getAttribute("currentUser");
 		User user=userService.findById(currentUser.getId());
-		user.setPassword(newPassword);
+		user.setPassword(MD5Util.encode(newPassword));
+		user.setUpdateTime(new Date());
 		userService.save(user);
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("success", true);
@@ -162,6 +166,10 @@ public class UserAdminController {
 		}else{
 			logService.save(new Log(Log.ADD_ACTION,"添加用户信息"+user)); 
 		}
+		user.setPassword(MD5Util.encode(user.getPassword()));
+		user.setCreateTime(new Date());
+		user.setUpdateTime(new Date());
+		user.setUuid(UUIDUtil.getUUIDKey());
 		userService.save(user);			
 		resultMap.put("success", true);
 		return resultMap;
