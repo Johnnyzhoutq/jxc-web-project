@@ -90,6 +90,9 @@ public class CustomerReturnListServiceImpl implements CustomerReturnListService{
 					if(customerReturnList.geteCustomerReturnDate()!=null){
 						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("customerReturnDate"), customerReturnList.geteCustomerReturnDate()));
 					}
+					if(customerReturnList.getShopId()!=null && customerReturnList.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), customerReturnList.getShopId()));
+					}
 				}
 				return predicate;
 			}

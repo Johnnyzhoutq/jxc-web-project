@@ -28,7 +28,7 @@ public interface GoodsRepository extends JpaRepository<Goods, Integer>,JpaSpecif
 	 * 查询库存报警商品 库存小于库存下限的商品
 	 * @return
 	 */
-	@Query(value="SELECT * FROM t_goods WHERE inventory_quantity<min_num",nativeQuery=true)
-	public List<Goods> listAlarm();
+	@Query(value="SELECT * FROM t_goods WHERE inventory_quantity<min_num and shop_id=?1",nativeQuery=true)
+	public List<Goods> listAlarm(Integer shopId);
 	
 }

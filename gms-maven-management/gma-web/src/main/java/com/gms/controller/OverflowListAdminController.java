@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -24,10 +25,12 @@ import com.google.gson.reflect.TypeToken;
 import com.gms.entity.jxc.Log;
 import com.gms.entity.jxc.OverflowList;
 import com.gms.entity.jxc.OverflowListGoods;
+import com.gms.entity.jxc.User;
 import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.OverflowListGoodsService;
 import com.gms.service.jxc.OverflowListService;
 import com.gms.service.jxc.UserService;
+import com.gms.util.Constant;
 import com.gms.util.DateUtil;
 import com.gms.util.StringUtil;
 
@@ -38,7 +41,7 @@ import com.gms.util.StringUtil;
  */
 @RestController
 @RequestMapping("/admin/overflowList")
-public class OverflowListAdminController {
+public class OverflowListAdminController extends BaseController{
 
 	@Resource
 	private OverflowListService overflowListService;
@@ -69,7 +72,11 @@ public class OverflowListAdminController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions(value = { "报损报溢查询" })
-	public Map<String,Object> list(OverflowList overflowList)throws Exception{
+	public Map<String,Object> list(OverflowList overflowList,HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			overflowList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<OverflowList> overflowListList=overflowListService.list(overflowList, Direction.DESC, "overflowDate");
 		resultMap.put("rows", overflowListList);
@@ -112,7 +119,7 @@ public class OverflowListAdminController {
 		if(overflowNumber!=null){
 			biilCodeStr.append(StringUtil.formatCode(overflowNumber));
 		}else{
-			biilCodeStr.append("0001");
+			biilCodeStr.append(Constant.DEFAULT_TABLE_CODE);
 		}
 		return biilCodeStr.toString();
 	}
@@ -127,7 +134,12 @@ public class OverflowListAdminController {
 	@ResponseBody
 	@RequestMapping("/save")
 	@RequiresPermissions(value = {"商品报溢"})
-	public Map<String,Object> save(OverflowList overflowList,String goodsJson)throws Exception{
+	public Map<String,Object> save(OverflowList overflowList,String goodsJson,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			overflowList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		overflowList.setUser(userService.findByUserName((String) SecurityUtils.getSubject().getPrincipal())); // 设置操作用户
 		Gson gson = new Gson();

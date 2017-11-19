@@ -19,6 +19,7 @@ public interface SupplierService {
 	 * @return
 	 */
 	public List<Supplier> findByName(String name);
+	public List<Supplier> findByShopAndName(Integer shopId,String name);
 	
 	/**
 	 * 根据id查询实体

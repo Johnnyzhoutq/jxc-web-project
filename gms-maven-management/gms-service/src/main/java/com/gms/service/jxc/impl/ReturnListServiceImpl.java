@@ -95,6 +95,9 @@ public class ReturnListServiceImpl implements ReturnListService{
 					if(returnList.geteReturnDate()!=null){
 						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("returnDate"), returnList.geteReturnDate()));
 					}
+					if(returnList.getShopId()!=null && returnList.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), returnList.getShopId()));
+					}
 				}
 				return predicate;
 			}

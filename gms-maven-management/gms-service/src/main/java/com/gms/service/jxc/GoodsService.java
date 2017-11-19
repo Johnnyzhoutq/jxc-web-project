@@ -47,7 +47,7 @@ public interface GoodsService {
 	 * @param properties
 	 * @return
 	 */
-	public List<Goods> listNoInventoryQuantityByCodeOrName(String codeOrName,Integer page,Integer pageSize,Direction direction,String... properties);
+	public List<Goods> listNoInventoryQuantityByCodeOrName(Integer shopId,String codeOrName,Integer page,Integer pageSize,Direction direction,String... properties);
 	
 	/**
 	 * 分页查询有库存的商品信息
@@ -57,7 +57,7 @@ public interface GoodsService {
 	 * @param properties
 	 * @return
 	 */
-	public List<Goods> listHasInventoryQuantity(Integer page,Integer pageSize,Direction direction,String... properties);
+	public List<Goods> listHasInventoryQuantity(Integer shopId,Integer page,Integer pageSize,Direction direction,String... properties);
 	
 	/**
 	 * 获取总记录数
@@ -71,14 +71,14 @@ public interface GoodsService {
 	 * @param codeOrName
 	 * @return
 	 */
-	public Long getCountNoInventoryQuantityByCodeOrName(String codeOrName);
+	public Long getCountNoInventoryQuantityByCodeOrName(Integer shopId,String codeOrName);
 	
 	/**
 	 * 查询有库存的商品信息信息总记录数
 	 * @param codeOrName
 	 * @return
 	 */
-	public Long getCountHasInventoryQuantity();
+	public Long getCountHasInventoryQuantity(Integer shopId);
 	
 	/**
 	 * 根据id删除商品
@@ -96,7 +96,7 @@ public interface GoodsService {
 	 * 查询库存报警商品 库存小于库存下限的商品
 	 * @return
 	 */
-	public List<Goods> listAlarm();
+	public List<Goods> listAlarm(Integer shopId);
 	
 
 }

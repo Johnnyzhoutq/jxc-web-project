@@ -19,6 +19,7 @@ public interface CustomerService {
 	 * @return
 	 */
 	public List<Customer> findByName(String name);
+	public List<Customer> findByShopAndName(Integer shopId,String name);
 	
 	/**
 	 * 根据id查询实体

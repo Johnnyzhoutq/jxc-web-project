@@ -95,6 +95,9 @@ public class PurchaseListServiceImpl implements PurchaseListService{
 					if(purchaseList.getePurchaseDate()!=null){
 						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("purchaseDate"), purchaseList.getePurchaseDate()));
 					}
+					if(purchaseList.getShopId()!=null && purchaseList.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), purchaseList.getShopId()));
+					}
 				}
 				return predicate;
 			}

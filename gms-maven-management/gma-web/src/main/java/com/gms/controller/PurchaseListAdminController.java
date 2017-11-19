@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -24,10 +25,12 @@ import com.google.gson.reflect.TypeToken;
 import com.gms.entity.jxc.Log;
 import com.gms.entity.jxc.PurchaseList;
 import com.gms.entity.jxc.PurchaseListGoods;
+import com.gms.entity.jxc.User;
 import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.PurchaseListGoodsService;
 import com.gms.service.jxc.PurchaseListService;
 import com.gms.service.jxc.UserService;
+import com.gms.util.Constant;
 import com.gms.util.DateUtil;
 import com.gms.util.StringUtil;
 
@@ -38,7 +41,7 @@ import com.gms.util.StringUtil;
  */
 @RestController
 @RequestMapping("/admin/purchaseList")
-public class PurchaseListAdminController {
+public class PurchaseListAdminController extends BaseController{
 
 	@Resource
 	private PurchaseListService purchaseListService;
@@ -69,7 +72,11 @@ public class PurchaseListAdminController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions(value = { "进货单据查询" })
-	public Map<String,Object> list(PurchaseList purchaseList)throws Exception{
+	public Map<String,Object> list(PurchaseList purchaseList,HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			purchaseList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<PurchaseList> purchaseListList=purchaseListService.list(purchaseList, Direction.DESC, "purchaseDate");
 		resultMap.put("rows", purchaseListList);
@@ -103,7 +110,12 @@ public class PurchaseListAdminController {
 	 */
 	@RequestMapping("/listCount")
 	@RequiresPermissions(value = { "客户统计" })
-	public Map<String,Object> listCount(PurchaseList purchaseList,PurchaseListGoods purchaseListGoods)throws Exception{
+	public Map<String,Object> listCount(PurchaseList purchaseList,PurchaseListGoods purchaseListGoods,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			purchaseList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<PurchaseList> purchaseListList=purchaseListService.list(purchaseList, Direction.DESC, "purchaseDate");
 		for(PurchaseList pl:purchaseListList){
@@ -135,7 +147,7 @@ public class PurchaseListAdminController {
 		if(purchaseNumber!=null){
 			biilCodeStr.append(StringUtil.formatCode(purchaseNumber));
 		}else{
-			biilCodeStr.append("0001");
+			biilCodeStr.append(Constant.DEFAULT_TABLE_CODE);
 		}
 		return biilCodeStr.toString();
 	}
@@ -150,7 +162,12 @@ public class PurchaseListAdminController {
 	@ResponseBody
 	@RequestMapping("/save")
 	@RequiresPermissions(value = {"进货入库"})
-	public Map<String,Object> save(PurchaseList purchaseList,String goodsJson)throws Exception{
+	public Map<String,Object> save(PurchaseList purchaseList,String goodsJson,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			purchaseList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		purchaseList.setUser(userService.findByUserName((String) SecurityUtils.getSubject().getPrincipal())); // 设置操作用户
 		Gson gson = new Gson();

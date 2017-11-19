@@ -23,4 +23,7 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer>,Jpa
 	@Query(value="select * from t_supplier where name like ?1",nativeQuery=true)
 	public List<Supplier> findByName(String name);
 	
+	@Query(value="select * from t_supplier where shop_id=?1 and name like ?2",nativeQuery=true)
+	public List<Supplier> findByShopAndName(Integer shopId,String name);
+	
 }

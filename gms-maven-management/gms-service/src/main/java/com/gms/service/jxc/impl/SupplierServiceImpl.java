@@ -49,6 +49,9 @@ public class SupplierServiceImpl implements SupplierService{
 					if(StringUtil.isNotEmpty(supplier.getName())){
 						predicate.getExpressions().add(cb.like(root.get("name"), "%"+supplier.getName().trim()+"%"));
 					}	
+					if(supplier.getShopId()!=null && supplier.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), supplier.getShopId()));
+					}
 				}
 				return predicate;
 			}
@@ -88,6 +91,10 @@ public class SupplierServiceImpl implements SupplierService{
 	public List<Supplier> findByName(String name) {
 		return supplierRepository.findByName(name);
 	}
-
+	
+	@Override
+	public List<Supplier> findByShopAndName(Integer shopId,String name) {
+		return supplierRepository.findByShopAndName(shopId,name);
+	}
 
 }

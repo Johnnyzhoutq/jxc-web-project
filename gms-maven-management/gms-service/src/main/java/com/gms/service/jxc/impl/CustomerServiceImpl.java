@@ -49,6 +49,9 @@ public class CustomerServiceImpl implements CustomerService{
 					if(StringUtil.isNotEmpty(customer.getName())){
 						predicate.getExpressions().add(cb.like(root.get("name"), "%"+customer.getName().trim()+"%"));
 					}	
+					if(customer.getShopId()!=null && customer.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), customer.getShopId()));
+					}
 				}
 				return predicate;
 			}
@@ -89,5 +92,8 @@ public class CustomerServiceImpl implements CustomerService{
 		return customerRepository.findByName(name);
 	}
 
-
+	@Override
+	public List<Customer> findByShopAndName(Integer shopId,String name) {
+		return customerRepository.findByShopAndName(shopId,name);
+	}
 }

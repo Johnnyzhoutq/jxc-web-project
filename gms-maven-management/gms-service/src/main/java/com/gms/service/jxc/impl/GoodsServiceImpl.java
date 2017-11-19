@@ -52,7 +52,10 @@ public class GoodsServiceImpl implements GoodsService {
 				if(goods!=null){
 					if(StringUtil.isNotEmpty(goods.getName())){
 						predicate.getExpressions().add(cb.like(root.get("name"), "%"+goods.getName().trim()+"%"));
-					}	
+					}
+					if(goods.getShopId()!=null && goods.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), goods.getShopId()));
+					}
 					if(goods.getType()!=null && goods.getType().getId()!=null && goods.getType().getId()!=1){
 						predicate.getExpressions().add(cb.equal(root.get("type").get("id"), goods.getType().getId()));
 					}
@@ -76,7 +79,10 @@ public class GoodsServiceImpl implements GoodsService {
 				if(goods!=null){
 					if(StringUtil.isNotEmpty(goods.getName())){
 						predicate.getExpressions().add(cb.like(root.get("name"), "%"+goods.getName().trim()+"%"));
-					}	
+					}
+					if(goods.getShopId()!=null && goods.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), goods.getShopId()));
+					}
 					if(goods.getType()!=null && goods.getType().getId()!=null && goods.getType().getId()!=1){
 						predicate.getExpressions().add(cb.equal(root.get("type").get("id"), goods.getType().getId()));
 					}
@@ -101,7 +107,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public List<Goods> listNoInventoryQuantityByCodeOrName(String codeOrName, Integer page, Integer pageSize,
+	public List<Goods> listNoInventoryQuantityByCodeOrName(Integer shopId,String codeOrName, Integer page, Integer pageSize,
 			Direction direction, String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
 		Page<Goods> pageUser=goodsRepository.findAll(new Specification<Goods>() {
@@ -112,6 +118,9 @@ public class GoodsServiceImpl implements GoodsService {
 				if(StringUtil.isNotEmpty(codeOrName)){
 					predicate.getExpressions().add(cb.or(cb.like(root.get("code"),"%"+codeOrName+"%"), cb.like(root.get("name"),"%"+codeOrName+"%")));
 				}
+				if(shopId!=null && shopId.intValue()>0){//默认等于零
+					predicate.getExpressions().add(cb.equal(root.get("shopId"), shopId.intValue()));
+				}
 				predicate.getExpressions().add(cb.equal(root.get("inventoryQuantity"), 0)); // 库存是0
 				return predicate;
 			}
@@ -120,7 +129,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public Long getCountNoInventoryQuantityByCodeOrName(String codeOrName) {
+	public Long getCountNoInventoryQuantityByCodeOrName(Integer shopId,String codeOrName) {
 		Long count=goodsRepository.count(new Specification<Goods>() {
 
 			@Override
@@ -128,6 +137,9 @@ public class GoodsServiceImpl implements GoodsService {
 				Predicate predicate=cb.conjunction();
 				if(StringUtil.isNotEmpty(codeOrName)){
 					predicate.getExpressions().add(cb.or(cb.like(root.get("code"),"%"+codeOrName+"%"), cb.like(root.get("name"),"%"+codeOrName+"%")));
+				}
+				if(shopId!=null && shopId.intValue()>0){//默认等于零
+					predicate.getExpressions().add(cb.equal(root.get("shopId"), shopId.intValue()));
 				}
 				predicate.getExpressions().add(cb.equal(root.get("inventoryQuantity"), 0)); // 库存是0
 				return predicate;
@@ -137,7 +149,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public List<Goods> listHasInventoryQuantity(Integer page, Integer pageSize, Direction direction,
+	public List<Goods> listHasInventoryQuantity(Integer shopId,Integer page, Integer pageSize, Direction direction,
 			String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
 		Page<Goods> pageUser=goodsRepository.findAll(new Specification<Goods>() {
@@ -145,6 +157,9 @@ public class GoodsServiceImpl implements GoodsService {
 			@Override
 			public Predicate toPredicate(Root<Goods> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate predicate=cb.conjunction();
+				if(shopId!=null && shopId.intValue()>0){//默认等于零
+					predicate.getExpressions().add(cb.equal(root.get("shopId"), shopId.intValue()));
+				}
 				predicate.getExpressions().add(cb.greaterThan(root.get("inventoryQuantity"), 0)); // 库存不是0
 				return predicate;
 			}
@@ -153,12 +168,15 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public Long getCountHasInventoryQuantity() {
+	public Long getCountHasInventoryQuantity(Integer shopId) {
 		Long count=goodsRepository.count(new Specification<Goods>() {
 
 			@Override
 			public Predicate toPredicate(Root<Goods> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate predicate=cb.conjunction();
+				if(shopId!=null && shopId.intValue()>0){//默认等于零
+					predicate.getExpressions().add(cb.equal(root.get("shopId"), shopId.intValue()));
+				}
 				predicate.getExpressions().add(cb.greaterThan(root.get("inventoryQuantity"), 0)); // 库存不是0
 				return predicate;
 			}
@@ -167,8 +185,8 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public List<Goods> listAlarm() {
-		return goodsRepository.listAlarm();
+	public List<Goods> listAlarm(Integer shopId) {
+		return goodsRepository.listAlarm(shopId);
 	}
 
 

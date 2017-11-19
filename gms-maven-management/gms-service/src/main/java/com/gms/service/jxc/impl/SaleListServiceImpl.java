@@ -90,6 +90,9 @@ public class SaleListServiceImpl implements SaleListService{
 					if(saleList.geteSaleDate()!=null){
 						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("saleDate"), saleList.geteSaleDate()));
 					}
+					if(saleList.getShopId()!=null && saleList.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), saleList.getShopId()));
+					}
 				}
 				return predicate;
 			}
@@ -113,13 +116,13 @@ public class SaleListServiceImpl implements SaleListService{
 	}
 
 	@Override
-	public List<Object> countSaleByDay(String begin, String end) {
-		return saleListRepository.countSaleByDay(begin, end);
+	public List<Object> countSaleByDay(String begin, String end,Integer shopId) {
+		return saleListRepository.countSaleByDay(begin, end, shopId);
 	}
 
 	@Override
-	public List<Object> countSaleByMonth(String begin, String end) {
-		return saleListRepository.countSaleByMonth(begin, end);
+	public List<Object> countSaleByMonth(String begin, String end,Integer shopId) {
+		return saleListRepository.countSaleByMonth(begin, end, shopId);
 	}
 
 

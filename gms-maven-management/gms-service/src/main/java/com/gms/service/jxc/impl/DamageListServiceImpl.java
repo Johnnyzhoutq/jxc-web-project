@@ -80,6 +80,9 @@ public class DamageListServiceImpl implements DamageListService{
 					if(damageList.geteDamageDate()!=null){
 						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("damageDate"), damageList.geteDamageDate()));
 					}
+					if(damageList.getShopId()!=null && damageList.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), damageList.getShopId()));
+					}
 				}
 				return predicate;
 			}

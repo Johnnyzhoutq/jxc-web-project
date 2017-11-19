@@ -63,7 +63,7 @@ public interface SaleListService {
 	 * @param end
 	 * @return
 	 */
-	public List<Object> countSaleByDay(String begin,String end);
+	public List<Object> countSaleByDay(String begin,String end,Integer shopId);
 	
 	/**
 	 * 按月统计某个日期范围内的销售信息
@@ -71,6 +71,6 @@ public interface SaleListService {
 	 * @param end
 	 * @return
 	 */
-	public List<Object> countSaleByMonth(String begin,String end);
+	public List<Object> countSaleByMonth(String begin,String end,Integer shopId);
 
 }

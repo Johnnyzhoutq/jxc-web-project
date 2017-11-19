@@ -80,6 +80,9 @@ public class OverflowListServiceImpl implements OverflowListService{
 					if(overflowList.geteOverflowDate()!=null){
 						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("overflowDate"), overflowList.geteOverflowDate()));
 					}
+					if(overflowList.getShopId()!=null && overflowList.getShopId().intValue()>0){//默认等于零
+						predicate.getExpressions().add(cb.equal(root.get("shopId"), overflowList.getShopId()));
+					}
 				}
 				return predicate;
 			}
