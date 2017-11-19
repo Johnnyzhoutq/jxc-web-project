@@ -1,0 +1,30 @@
+server:  
+    port: 8080
+    #address: localhost
+    context-path: /
+spring:
+    jpa:
+        hibernate.ddl-auto: update
+        show-sql: true
+    datasource: 
+        name: db_jxc
+        url: jdbc:mysql://localhost:3306/gms_new?characterEncoding=utf-8
+        username: root
+        password: root
+        # 使用druid数据源
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        filters: stat,log4j
+        maxActive: 20
+        initialSize: 1
+        maxWait: 60000
+        minIdle: 1
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        #cachePrepStmts: true 开启二级缓存
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
