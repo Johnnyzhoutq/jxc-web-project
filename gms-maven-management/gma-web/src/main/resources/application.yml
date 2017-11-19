@@ -9,7 +9,7 @@ spring:
         show-sql: true
     datasource: 
         name: db_jxc
-        url: jdbc:mysql://localhost:3306/db_jxc?characterEncoding=utf-8
+        url: jdbc:mysql://localhost:3306/gms_new?characterEncoding=utf-8
         username: root
         password: root
         # 使用druid数据源
@@ -31,7 +31,7 @@ spring:
         maxOpenPreparedStatements: 20
     freemarker:
         allow-request-override: false
-        cache: true
+        cache: false
         check-template-location: true
         charset: UTF-8
         content-type: text/html

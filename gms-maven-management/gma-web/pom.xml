@@ -16,10 +16,14 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>com.gms</groupId>
-	  <artifactId>gms-service</artifactId>
-	  <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+	  	<dependency>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+	    <dependency>
+			      <groupId>com.gms</groupId>
+				  <artifactId>gms-service</artifactId>
+				  <version>0.0.1-SNAPSHOT</version>
+	    </dependency>
   </dependencies>
 </project>
