@@ -54,15 +54,15 @@ public class StringUtil {
 	public static String formatCode(String code){
 		try {
 			int length = code.length();
-			Integer num = Integer.valueOf(code.substring(length-4,length))+1;
+			Integer num = Integer.valueOf(code.substring(length-8,length))+1;
 			String codenum = num.toString();
 			int codelength = codenum.length();
-			for (int i = 4; i > codelength; i--) {
+			for (int i = 8; i > codelength; i--) {
 				codenum = "0"+codenum;
 			}
 			return codenum;
 		} catch (NumberFormatException e) {
-			return "0100";
+			return "00000100";
 		}
 	}
 
@@ -670,7 +670,7 @@ public class StringUtil {
         return String.format("%.2f", d);
     }
 	public static void main(String[] args) {
-		System.out.println(StringUtil.getMaxValue(5,6,12,45,23,65,2,34));
+		System.out.println(StringUtil.formatCode("JH201711099999"));
 		System.out.println(0.0==0);
 	}
 }

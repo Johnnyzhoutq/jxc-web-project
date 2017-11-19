@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -26,10 +27,12 @@ import com.gms.entity.jxc.Log;
 import com.gms.entity.jxc.SaleCount;
 import com.gms.entity.jxc.SaleList;
 import com.gms.entity.jxc.SaleListGoods;
+import com.gms.entity.jxc.User;
 import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.SaleListGoodsService;
 import com.gms.service.jxc.SaleListService;
 import com.gms.service.jxc.UserService;
+import com.gms.util.Constant;
 import com.gms.util.DateUtil;
 import com.gms.util.MathUtil;
 import com.gms.util.StringUtil;
@@ -41,7 +44,7 @@ import com.gms.util.StringUtil;
  */
 @RestController
 @RequestMapping("/admin/saleList")
-public class SaleListAdminController {
+public class SaleListAdminController extends BaseController{
 
 	@Resource
 	private SaleListService saleListService;
@@ -72,7 +75,11 @@ public class SaleListAdminController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions(value = { "销售单据查询" })
-	public Map<String,Object> list(SaleList saleList)throws Exception{
+	public Map<String,Object> list(SaleList saleList,HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			saleList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<SaleList> saleListList=saleListService.list(saleList, Direction.DESC, "saleDate");
 		resultMap.put("rows", saleListList);
@@ -106,7 +113,12 @@ public class SaleListAdminController {
 	 */
 	@RequestMapping("/listCount")
 	@RequiresPermissions(value = { "客户统计" })
-	public Map<String,Object> listCount(SaleList saleList,SaleListGoods saleListGoods)throws Exception{
+	public Map<String,Object> listCount(SaleList saleList,SaleListGoods saleListGoods,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			saleList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<SaleList> saleListList=saleListService.list(saleList, Direction.DESC, "saleDate");
 		for(SaleList pl:saleListList){
@@ -138,7 +150,7 @@ public class SaleListAdminController {
 		if(saleNumber!=null){
 			biilCodeStr.append(StringUtil.formatCode(saleNumber));
 		}else{
-			biilCodeStr.append("0001");
+			biilCodeStr.append(Constant.DEFAULT_TABLE_CODE);
 		}
 		return biilCodeStr.toString();
 	}
@@ -171,7 +183,12 @@ public class SaleListAdminController {
 	@ResponseBody
 	@RequestMapping("/save")
 	@RequiresPermissions(value = {"销售出库"})
-	public Map<String,Object> save(SaleList saleList,String goodsJson)throws Exception{
+	public Map<String,Object> save(SaleList saleList,String goodsJson,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			saleList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		saleList.setUser(userService.findByUserName((String) SecurityUtils.getSubject().getPrincipal())); // 设置操作用户
 		Gson gson = new Gson();
@@ -207,11 +224,12 @@ public class SaleListAdminController {
 	 */
 	@RequestMapping("/countSaleByDay")
 	@RequiresPermissions(value = { "按日统计分析" })
-	public Map<String,Object> countSaleByDay(String begin,String end)throws Exception{
+	public Map<String,Object> countSaleByDay(String begin,String end,HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
 		Map<String, Object> resultMap = new HashMap<>();
 		List<SaleCount> scdList=new ArrayList<SaleCount>();
 		List<String> datas=DateUtil.getRangeDates(begin, end);
-		List<Object> ll= saleListService.countSaleByDay(begin, end);
+		List<Object> ll= saleListService.countSaleByDay(begin, end,currentUser.getShopId());
 		for(String data:datas){
 			SaleCount scd=new SaleCount();
 			scd.setDate(data);
@@ -247,11 +265,12 @@ public class SaleListAdminController {
 	 */
 	@RequestMapping("/countSaleByMonth")
 	@RequiresPermissions(value = { "按月统计分析" })
-	public Map<String,Object> countSaleByMonth(String begin,String end)throws Exception{
+	public Map<String,Object> countSaleByMonth(String begin,String end,HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
 		Map<String, Object> resultMap = new HashMap<>();
 		List<SaleCount> scList=new ArrayList<SaleCount>();
 		List<String> datas=DateUtil.getRangeMonth(begin, end);
-		List<Object> ll= saleListService.countSaleByMonth(begin, end);
+		List<Object> ll= saleListService.countSaleByMonth(begin, end, currentUser.getShopId());
 		for(String data:datas){
 			SaleCount sc=new SaleCount();
 			sc.setDate(data);

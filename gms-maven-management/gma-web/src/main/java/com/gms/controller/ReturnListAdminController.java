@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -24,10 +25,12 @@ import com.google.gson.reflect.TypeToken;
 import com.gms.entity.jxc.Log;
 import com.gms.entity.jxc.ReturnList;
 import com.gms.entity.jxc.ReturnListGoods;
+import com.gms.entity.jxc.User;
 import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.ReturnListGoodsService;
 import com.gms.service.jxc.ReturnListService;
 import com.gms.service.jxc.UserService;
+import com.gms.util.Constant;
 import com.gms.util.DateUtil;
 import com.gms.util.StringUtil;
 
@@ -38,7 +41,7 @@ import com.gms.util.StringUtil;
  */
 @RestController
 @RequestMapping("/admin/returnList")
-public class ReturnListAdminController {
+public class ReturnListAdminController extends BaseController{
 
 	@Resource
 	private ReturnListService returnListService;
@@ -69,7 +72,11 @@ public class ReturnListAdminController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions(value = { "退货单据查询" })
-	public Map<String,Object> list(ReturnList returnList)throws Exception{
+	public Map<String,Object> list(ReturnList returnList,HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			returnList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<ReturnList> returnListList=returnListService.list(returnList, Direction.DESC, "returnDate");
 		resultMap.put("rows", returnListList);
@@ -103,7 +110,12 @@ public class ReturnListAdminController {
 	 */
 	@RequestMapping("/listCount")
 	@RequiresPermissions(value = { "客户统计" })
-	public Map<String,Object> listCount(ReturnList returnList,ReturnListGoods returnListGoods)throws Exception{
+	public Map<String,Object> listCount(ReturnList returnList,ReturnListGoods returnListGoods,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			returnList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<ReturnList> returnListList=returnListService.list(returnList, Direction.DESC, "returnDate");
 		for(ReturnList pl:returnListList){
@@ -135,7 +147,7 @@ public class ReturnListAdminController {
 		if(returnNumber!=null){
 			biilCodeStr.append(StringUtil.formatCode(returnNumber));
 		}else{
-			biilCodeStr.append("0001");
+			biilCodeStr.append(Constant.DEFAULT_TABLE_CODE);
 		}
 		return biilCodeStr.toString();
 	}
@@ -150,7 +162,12 @@ public class ReturnListAdminController {
 	@ResponseBody
 	@RequestMapping("/save")
 	@RequiresPermissions(value = {"退货出库"})
-	public Map<String,Object> save(ReturnList returnList,String goodsJson)throws Exception{
+	public Map<String,Object> save(ReturnList returnList,String goodsJson,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			returnList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		returnList.setUser(userService.findByUserName((String) SecurityUtils.getSubject().getPrincipal())); // 设置操作用户
 		Gson gson = new Gson();

@@ -1,10 +1,12 @@
 package com.gms.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gms.entity.jxc.Goods;
 import com.gms.entity.jxc.Log;
+import com.gms.entity.jxc.User;
 import com.gms.service.jxc.CustomerReturnListGoodsService;
 import com.gms.service.jxc.GoodsService;
 import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.SaleListGoodsService;
+import com.gms.util.Constant;
 import com.gms.util.StringUtil;
 
 /**
@@ -28,7 +32,7 @@ import com.gms.util.StringUtil;
  */
 @RestController
 @RequestMapping("/admin/goods")
-public class GoodsAdminContrller {
+public class GoodsAdminContrller extends BaseController{
 
 	@Resource
 	private GoodsService goodsService;
@@ -52,7 +56,12 @@ public class GoodsAdminContrller {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions(value = { "商品管理","进货入库"},logical=Logical.OR)
-	public Map<String,Object> list(Goods goods,@RequestParam(value="page",required=false)Integer page,@RequestParam(value="rows",required=false)Integer rows)throws Exception{
+	public Map<String,Object> list(Goods goods,@RequestParam(value="page",required=false)Integer page,@RequestParam(value="rows",required=false)Integer rows,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			goods.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<Goods> goodsList=goodsService.list(goods, page, rows, Direction.ASC, "id");
 		Long total=goodsService.getCount(goods);
@@ -72,7 +81,12 @@ public class GoodsAdminContrller {
 	 */
 	@RequestMapping("/listInventory")
 	@RequiresPermissions(value = { "当前库存查询" })
-	public Map<String,Object> listInventory(Goods goods,@RequestParam(value="page",required=false)Integer page,@RequestParam(value="rows",required=false)Integer rows)throws Exception{
+	public Map<String,Object> listInventory(Goods goods,@RequestParam(value="page",required=false)Integer page,@RequestParam(value="rows",required=false)Integer rows,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			goods.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<Goods> goodsList=goodsService.list(goods, page, rows, Direction.ASC, "id");
 		Long total=goodsService.getCount(goods);
@@ -92,9 +106,13 @@ public class GoodsAdminContrller {
 	 */
 	@RequestMapping("/listAlarm")
 	@RequiresPermissions(value = { "库存报警" })
-	public Map<String,Object> listAlart()throws Exception{
+	public Map<String,Object> listAlart(HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
 		Map<String, Object> resultMap = new HashMap<>();
-		List<Goods> alarmGoodsList=goodsService.listAlarm();
+		List<Goods> alarmGoodsList = new ArrayList<>();
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			alarmGoodsList=goodsService.listAlarm(currentUser.getShopId());
+		}
 		resultMap.put("rows", alarmGoodsList);
 		return resultMap;
 	}
@@ -107,10 +125,12 @@ public class GoodsAdminContrller {
 	 */
 	@RequestMapping("/listNoInventoryQuantity")
 	@RequiresPermissions(value = { "期初库存" })
-	public Map<String,Object> listNoInventoryQuantity(@RequestParam(value="codeOrName",required=false)String codeOrName,@RequestParam(value="page",required=false)Integer page,@RequestParam(value="rows",required=false)Integer rows)throws Exception{
+	public Map<String,Object> listNoInventoryQuantity(@RequestParam(value="codeOrName",required=false)String codeOrName,@RequestParam(value="page",required=false)Integer page,@RequestParam(value="rows",required=false)Integer rows,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
 		Map<String, Object> resultMap = new HashMap<>();
-		List<Goods> goodsList=goodsService.listNoInventoryQuantityByCodeOrName(codeOrName, page, rows, Direction.ASC, "id");
-		Long total=goodsService.getCountNoInventoryQuantityByCodeOrName(codeOrName);
+		List<Goods> goodsList=goodsService.listNoInventoryQuantityByCodeOrName(currentUser.getShopId(),codeOrName, page, rows, Direction.ASC, "id");
+		Long total=goodsService.getCountNoInventoryQuantityByCodeOrName(currentUser.getShopId(),codeOrName);
 		resultMap.put("rows", goodsList);
 		resultMap.put("total", total);
 		logService.save(new Log(Log.SEARCH_ACTION,"查询商品信息（无库存）")); // 写入日志
@@ -125,10 +145,12 @@ public class GoodsAdminContrller {
 	 */
 	@RequestMapping("/listHasInventoryQuantity")
 	@RequiresPermissions(value = { "期初库存" })
-	public Map<String,Object> listHasInventoryQuantity(@RequestParam(value="page",required=false)Integer page,@RequestParam(value="rows",required=false)Integer rows)throws Exception{
+	public Map<String,Object> listHasInventoryQuantity(@RequestParam(value="page",required=false)Integer page,@RequestParam(value="rows",required=false)Integer rows,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
 		Map<String, Object> resultMap = new HashMap<>();
-		List<Goods> goodsList=goodsService.listHasInventoryQuantity(page, rows, Direction.ASC, "id");
-		Long total=goodsService.getCountHasInventoryQuantity();
+		List<Goods> goodsList=goodsService.listHasInventoryQuantity(currentUser.getShopId(),page, rows, Direction.ASC, "id");
+		Long total=goodsService.getCountHasInventoryQuantity(currentUser.getShopId());
 		resultMap.put("rows", goodsList);
 		resultMap.put("total", total);
 		logService.save(new Log(Log.SEARCH_ACTION,"查询商品信息（有库存）")); // 写入日志
@@ -187,12 +209,16 @@ public class GoodsAdminContrller {
 	 */
 	@RequestMapping("/save")
 	@RequiresPermissions(value = { "商品管理","进货入库"},logical=Logical.OR)
-	public Map<String,Object> save(Goods goods)throws Exception{
+	public Map<String,Object> save(Goods goods,HttpServletRequest request)throws Exception{
 		if(goods.getId()!=null){ // 写入日志
 			logService.save(new Log(Log.UPDATE_ACTION,"更新商品信息"+goods)); 
 		}else{
 			logService.save(new Log(Log.ADD_ACTION,"添加商品信息"+goods)); 
 			goods.setLastPurchasingPrice(goods.getPurchasingPrice()); // 设置上次进价为当前价格
+		}
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			goods.setShopId(currentUser.getShopId());
 		}
 		Map<String, Object> resultMap = new HashMap<>();
 		goodsService.save(goods);

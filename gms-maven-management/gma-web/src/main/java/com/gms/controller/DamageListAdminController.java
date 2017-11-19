@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -22,12 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gms.entity.jxc.Log;
+import com.gms.entity.jxc.User;
 import com.gms.entity.jxc.DamageList;
 import com.gms.entity.jxc.DamageListGoods;
 import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.UserService;
 import com.gms.service.jxc.DamageListGoodsService;
 import com.gms.service.jxc.DamageListService;
+import com.gms.util.Constant;
 import com.gms.util.DateUtil;
 import com.gms.util.StringUtil;
 
@@ -38,7 +41,7 @@ import com.gms.util.StringUtil;
  */
 @RestController
 @RequestMapping("/admin/damageList")
-public class DamageListAdminController {
+public class DamageListAdminController extends BaseController{
 
 	@Resource
 	private DamageListService damageListService;
@@ -69,7 +72,11 @@ public class DamageListAdminController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions(value = { "报损报溢查询" })
-	public Map<String,Object> list(DamageList damageList)throws Exception{
+	public Map<String,Object> list(DamageList damageList,HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			damageList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<DamageList> damageListList=damageListService.list(damageList, Direction.DESC, "damageDate");
 		resultMap.put("rows", damageListList);
@@ -112,7 +119,7 @@ public class DamageListAdminController {
 		if(damageNumber!=null){
 			biilCodeStr.append(StringUtil.formatCode(damageNumber));
 		}else{
-			biilCodeStr.append("0001");
+			biilCodeStr.append(Constant.DEFAULT_TABLE_CODE);
 		}
 		return biilCodeStr.toString();
 	}
@@ -127,7 +134,12 @@ public class DamageListAdminController {
 	@ResponseBody
 	@RequestMapping("/save")
 	@RequiresPermissions(value = {"商品报损"})
-	public Map<String,Object> save(DamageList damageList,String goodsJson)throws Exception{
+	public Map<String,Object> save(DamageList damageList,String goodsJson,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			damageList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		damageList.setUser(userService.findByUserName((String) SecurityUtils.getSubject().getPrincipal())); // 设置操作用户
 		Gson gson = new Gson();

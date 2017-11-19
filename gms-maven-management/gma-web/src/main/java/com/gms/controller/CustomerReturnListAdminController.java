@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -22,12 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gms.entity.jxc.Log;
+import com.gms.entity.jxc.User;
 import com.gms.entity.jxc.CustomerReturnList;
 import com.gms.entity.jxc.CustomerReturnListGoods;
 import com.gms.service.jxc.LogService;
 import com.gms.service.jxc.UserService;
 import com.gms.service.jxc.CustomerReturnListGoodsService;
 import com.gms.service.jxc.CustomerReturnListService;
+import com.gms.util.Constant;
 import com.gms.util.DateUtil;
 import com.gms.util.StringUtil;
 
@@ -38,7 +41,7 @@ import com.gms.util.StringUtil;
  */
 @RestController
 @RequestMapping("/admin/customerReturnList")
-public class CustomerReturnListAdminController {
+public class CustomerReturnListAdminController extends BaseController{
 
 	@Resource
 	private CustomerReturnListService customerReturnListService;
@@ -69,7 +72,11 @@ public class CustomerReturnListAdminController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions(value = { "客户退货查询" })
-	public Map<String,Object> list(CustomerReturnList customerReturnList)throws Exception{
+	public Map<String,Object> list(CustomerReturnList customerReturnList,HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			customerReturnList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<CustomerReturnList> customerReturnListList=customerReturnListService.list(customerReturnList, Direction.DESC, "customerReturnDate");
 		resultMap.put("rows", customerReturnListList);
@@ -84,7 +91,7 @@ public class CustomerReturnListAdminController {
 	 */
 	@RequestMapping("/listGoods")
 	@RequiresPermissions(value = { "客户退货查询" })
-	public Map<String,Object> listGoods(Integer customerReturnListId)throws Exception{
+	public Map<String,Object> listGoods(Integer customerReturnListId,HttpServletRequest request)throws Exception{
 		if(customerReturnListId==null){
 			return null;
 		}
@@ -103,7 +110,12 @@ public class CustomerReturnListAdminController {
 	 */
 	@RequestMapping("/listCount")
 	@RequiresPermissions(value = { "客户统计" })
-	public Map<String,Object> listCount(CustomerReturnList customerReturnList,CustomerReturnListGoods customerReturnListGoods)throws Exception{
+	public Map<String,Object> listCount(CustomerReturnList customerReturnList,CustomerReturnListGoods customerReturnListGoods,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			customerReturnList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		List<CustomerReturnList> customerReturnListList=customerReturnListService.list(customerReturnList, Direction.DESC, "customerReturnDate");
 		for(CustomerReturnList crl:customerReturnListList){
@@ -137,7 +149,7 @@ public class CustomerReturnListAdminController {
 		if(customerReturnNumber!=null){
 			biilCodeStr.append(StringUtil.formatCode(customerReturnNumber));
 		}else{
-			biilCodeStr.append("0001");
+			biilCodeStr.append(Constant.DEFAULT_TABLE_CODE);
 		}
 		return biilCodeStr.toString();
 	}
@@ -152,7 +164,12 @@ public class CustomerReturnListAdminController {
 	@ResponseBody
 	@RequestMapping("/save")
 	@RequiresPermissions(value = {"客户退货"})
-	public Map<String,Object> save(CustomerReturnList customerReturnList,String goodsJson)throws Exception{
+	public Map<String,Object> save(CustomerReturnList customerReturnList,String goodsJson,
+			HttpServletRequest request)throws Exception{
+		User currentUser = getCurrentUser(request);
+		if(currentUser.getUserType().equals(Constant.SHOPTYPE)){
+			customerReturnList.setShopId(currentUser.getShopId());
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		customerReturnList.setUser(userService.findByUserName((String) SecurityUtils.getSubject().getPrincipal())); // 设置操作用户
 		Gson gson = new Gson();

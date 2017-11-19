@@ -28,8 +28,8 @@ public interface SaleListRepository extends JpaRepository<SaleList, Integer>,Jpa
 	 * @param end
 	 * @return
 	 */
-	@Query(value="SELECT SUM(t3.purchasing_price*t1.num) AS amountCost,SUM(t1.price*t1.num) AS amountSale,t2.`sale_date` AS saleDate FROM t_sale_list_goods t1 LEFT JOIN t_sale_list t2 ON t1.`sale_list_id`=t2.`id`   LEFT JOIN t_goods t3 ON t3.`id`=t1.`goods_id` WHERE t2.`sale_date` BETWEEN ?1 AND ?2 GROUP BY t2.`sale_date` ",nativeQuery=true)
-	public List<Object> countSaleByDay(String begin,String end);
+	@Query(value="SELECT SUM(t3.purchasing_price*t1.num) AS amountCost,SUM(t1.price*t1.num) AS amountSale,t2.`sale_date` AS saleDate FROM t_sale_list_goods t1 LEFT JOIN t_sale_list t2 ON t1.`sale_list_id`=t2.`id`   LEFT JOIN t_goods t3 ON t3.`id`=t1.`goods_id` WHERE t2.`shop_id`=?3 and t2.`sale_date` BETWEEN ?1 AND ?2 GROUP BY t2.`sale_date` ",nativeQuery=true)
+	public List<Object> countSaleByDay(String begin,String end,Integer shopId);
 	
 	/**
 	 * 按月统计某个日期范围内的销售信息
@@ -37,6 +37,6 @@ public interface SaleListRepository extends JpaRepository<SaleList, Integer>,Jpa
 	 * @param end
 	 * @return
 	 */
-	@Query(value="SELECT SUM(t3.purchasing_price*t1.num) AS amountCost,SUM(t1.price*t1.num) AS amountSale,DATE_FORMAT(t2.`sale_date`,'%Y-%m') AS saleDate FROM t_sale_list_goods t1 LEFT JOIN t_sale_list t2 ON t1.`sale_list_id`=t2.`id`   LEFT JOIN t_goods t3 ON t3.`id`=t1.`goods_id` WHERE DATE_FORMAT(t2.`sale_date`,'%Y-%m') BETWEEN ?1 AND ?2 GROUP BY DATE_FORMAT(t2.`sale_date`,'%Y-%m') ",nativeQuery=true)
-	public List<Object> countSaleByMonth(String begin,String end);
+	@Query(value="SELECT SUM(t3.purchasing_price*t1.num) AS amountCost,SUM(t1.price*t1.num) AS amountSale,DATE_FORMAT(t2.`sale_date`,'%Y-%m') AS saleDate FROM t_sale_list_goods t1 LEFT JOIN t_sale_list t2 ON t1.`sale_list_id`=t2.`id`   LEFT JOIN t_goods t3 ON t3.`id`=t1.`goods_id` WHERE t2.`shop_id`=?3 and DATE_FORMAT(t2.`sale_date`,'%Y-%m') BETWEEN ?1 AND ?2 GROUP BY DATE_FORMAT(t2.`sale_date`,'%Y-%m') ",nativeQuery=true)
+	public List<Object> countSaleByMonth(String begin,String end,Integer shopId);
 }
