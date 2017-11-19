@@ -46,6 +46,17 @@ public class OverflowList {
 	@JoinColumn(name="userId")
 	private User user; // 操作用户
 	
+	@Column(length=11)
+    private Integer shopId; // 商户
+
+    public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
+	
 	@Column(length=1000)
 	private String remarks; // 备注
 

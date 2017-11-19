@@ -33,6 +33,17 @@ public class Supplier {
 	
 	@Column(length=1000)
 	private String remarks; // 备注
+	
+	@Column(length=11)
+    private Integer shopId; // 商户
+
+    public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
 
 	public Integer getId() {
 		return id;

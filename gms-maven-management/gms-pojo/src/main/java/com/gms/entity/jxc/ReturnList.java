@@ -60,6 +60,17 @@ public class ReturnList {
 	
 	@Transient
 	private List<ReturnListGoods> returnListGoodsList=null; // 退货单商品集合
+	
+	@Column(length=11)
+    private Integer shopId; // 商户
+
+    public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
 
 	public Integer getId() {
 		return id;
