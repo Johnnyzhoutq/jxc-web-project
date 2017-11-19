@@ -15,7 +15,7 @@
 	
 	function openCustomerReturnListGoodsAddDialog(){
 		$("#dlg").dialog("open").dialog("setTitle","客户退货商品选择");
-		
+		$("#action").val("add");
 		$("#tree").tree({
 			url:'/admin/goodsType/loadTreeInfo',
 			onLoadSuccess:function(node, data){

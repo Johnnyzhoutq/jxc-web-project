@@ -15,7 +15,7 @@
 	
 	function openSaleListGoodsAddDialog(){
 		$("#dlg").dialog("open").dialog("setTitle","销售出库商品选择");
-		
+		$("#action").val("add");
 		$("#tree").tree({
 			url:'/admin/goodsType/loadTreeInfo',
 			onLoadSuccess:function(node, data){

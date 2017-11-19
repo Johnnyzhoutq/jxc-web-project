@@ -15,7 +15,7 @@
 	
 	function openOverflowListGoodsAddDialog(){
 		$("#dlg").dialog("open").dialog("setTitle","商品报溢商品选择");
-		
+		$("#action").val("add");
 		$("#tree").tree({
 			url:'/admin/goodsType/loadTreeInfo',
 			onLoadSuccess:function(node, data){
